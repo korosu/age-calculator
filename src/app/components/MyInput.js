@@ -1,4 +1,4 @@
-let debuffed = false;
+let alreadyDebuff = false;
 export default function MyIpunt({ children, handleValue, debuff }) {
   const today = new Date();
   const totalDays = new Date(
@@ -12,46 +12,46 @@ export default function MyIpunt({ children, handleValue, debuff }) {
       case "day":
         if (value <= totalDays) {
           if (today.getDate() + 1 - value >= 0) {
-            if (debuffed) {
-              debuffed = false;
+            if (alreadyDebuff) {
+              alreadyDebuff = false;
               debuff((prev) => prev + 1);
             }
             return today.getDate() + 1 - value;
           } else {
-            console.log(debuffed);
-            if (!debuffed) {
+            console.log(alreadyDebuff);
+            if (!alreadyDebuff) {
               debuff((prev) => prev - 1);
-              debuffed = true;
+              alreadyDebuff = true;
             }
 
             return totalDays + (today.getDate() - value);
           }
         } else {
-          return "error";
+          return "--";
         }
       case "month":
         if (value <= 12) {
           if (today.getMonth() + 1 - value >= 0) {
-            if (debuffed) {
-              debuffed = false;
+            if (alreadyDebuff) {
+              alreadyDebuff = false;
               debuff((prev) => prev + 1);
             }
             return today.getMonth() + 1 - value;
           } else {
-            if (!debuffed) {
+            if (!alreadyDebuff) {
               debuff((prev) => prev - 1);
-              debuffed = true;
+              alreadyDebuff = true;
             }
             return 12 + (today.getMonth() + 1 - value);
           }
         } else {
-          return "error";
+          return "--";
         }
       case "year":
-        if (value <= today.getFullYear && value > 1900) {
+        if (value <= today.getFullYear() && value > 1900) {
           return today.getFullYear() - value;
         } else {
-          return "error";
+          return "--";
         }
     }
   }

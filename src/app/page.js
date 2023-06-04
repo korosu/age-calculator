@@ -1,30 +1,80 @@
 "use client";
-/* eslint-disable @next/next/no-img-element */
 import { useState } from "react";
-import MyIpunt from "./components/MyInput";
-const birthDay = { day: "", month: "", year: "" };
+/* eslint-disable @next/next/no-img-element */
+import MyInputKai from "./components/MyInputKai";
+const today = new Date();
+let inputMonth = 0;
+let inputYear = 0;
+let inputDay = 0;
 
 export default function Home() {
-  const [days, setDays] = useState("--");
-  const [months, setMonths] = useState("--");
-  const [years, setYears] = useState("--");
+  const [year, setYear] = useState("--");
+  const [month, setMonth] = useState("--");
+  const [day, setDay] = useState("--");
 
-  function retriveAge() {
-    setDays(31 - birthDay.day);
-    setMonths(6 - birthDay.month);
-    setYears(2023 - birthDay.year);
+  function displayDay(value) {
+    const birthDay = today.getDate() - value;
+    if (birthDay < 0) {
+      setDay(birthDay + 30);
+      displayMonth(inputMonth + 1);
+    } else {
+      setDay(birthDay);
+    }
+  }
+
+  function displayMonth(value) {
+    const birthMonth = today.getMonth() - value;
+    if (birthMonth < 0) {
+      setMonth(birthMonth + 12);
+      displayYear(inputYear + 1);
+    } else {
+      setMonth(birthMonth);
+    }
+  }
+
+  function displayYear(value) {
+    setYear(today.getFullYear() - value);
+  }
+
+  function dispalyBirthDay(e) {
+    switch (e.target.id) {
+      case "Day":
+        inputDay = e.target.value;
+        if (inputDay == "" || inputDay > 31 || inputDay <= 0) {
+          setDay("--");
+          break;
+        }
+        displayDay(e.target.value);
+        break;
+      case "Month":
+        inputMonth = e.target.value;
+        if (inputMonth == "" || inputMonth > 12 || inputMonth <= 0) {
+          setMonth("--");
+          break;
+        }
+        displayMonth(inputMonth);
+        break;
+      case "Year":
+        inputYear = e.target.value;
+        if (
+          inputYear == "" ||
+          inputYear <= 1900 ||
+          inputYear > today.getFullYear()
+        ) {
+          setYear("--");
+          break;
+        }
+        displayYear(inputYear);
+        break;
+    }
   }
   return (
     <div className=" bg-Off_white  flex h-screen w-screen items-center justify-center">
       <div className=" h-96 max-w-md rounded-lg rounded-br-3xl bg-White p-6">
         <div className=" grid grid-cols-3 gap-2 border-b-2 border-black pb-10">
-          <MyIpunt handleValue={setDays} debuff={setMonths}>
-            day
-          </MyIpunt>{" "}
-          <MyIpunt handleValue={setMonths} debuff={setYears}>
-            month
-          </MyIpunt>{" "}
-          <MyIpunt handleValue={setYears}>year</MyIpunt>{" "}
+          <MyInputKai onChange={(e) => dispalyBirthDay(e)}>Day</MyInputKai>
+          <MyInputKai onChange={(e) => dispalyBirthDay(e)}>Month</MyInputKai>
+          <MyInputKai onChange={(e) => dispalyBirthDay(e)}>Year</MyInputKai>
         </div>
         <div className="absolute right-1/2 flex h-12 w-12 -translate-y-1/2 translate-x-1/2 items-center justify-center rounded-full bg-green-400">
           <img
@@ -35,16 +85,16 @@ export default function Home() {
         </div>
         <div className="pt-10 text-6xl font-bold ">
           <div>
-            <p className="pr-4 text-Purple inline ">{years}</p>
-            <p className="inline">years</p>
+            <p className="pr-4 text-Purple inline ">{year}</p>
+            <p className="inline">year</p>
           </div>
           <div>
-            <p className="pr-4 inline text-Purple ">{months}</p>
-            <p className="inline">months</p>
+            <p className="pr-4 inline text-Purple ">{month}</p>
+            <p className="inline">month</p>
           </div>
           <div>
-            <p className="pr-4 inline text-Purple ">{days}</p>
-            <p className="inline">days</p>
+            <p className="pr-4 inline text-Purple ">{day}</p>
+            <p className="inline">day</p>
           </div>
         </div>
       </div>
